@@ -1,0 +1,47 @@
+name: Build Face Recognition APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Update system
+      run: |
+        sudo apt update
+
+    - name: Install system dependencies
+      run: |
+        sudo apt install -y \
+        git zip unzip openjdk-17-jdk \
+        python3-pip autoconf libtool pkg-config \
+        zlib1g-dev libncurses5-dev libncursesw5-dev \
+        cmake libffi-dev libssl-dev
+
+    - name: Install Python dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install cython==0.29.36
+        pip3 install buildozer
+
+    - name: Initialize buildozer
+      run: |
+        buildozer init || true
+
+    - name: Build APK
+      run: |
+        buildozer -v android debug
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: FaceRecApp-APK
+        path: bin/*.apk
