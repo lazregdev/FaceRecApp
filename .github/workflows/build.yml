@@ -1,0 +1,92 @@
+name: Build Face Recognition APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-22.04  # مهم: استخدم 22.04 وليس 24.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.8
+
+    - name: Install system dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          git \
+          wget \
+          unzip \
+          zip \
+          ccache \
+          autoconf \
+          libtool \
+          pkg-config \
+          zlib1g-dev \
+          libncurses5-dev \
+          libncursesw5-dev \
+          cmake \
+          libffi-dev \
+          libssl-dev \
+          libjpeg-dev \
+          libfreetype6-dev \
+          liblcms2-dev \
+          libwebp-dev \
+          tcl8.6-dev \
+          tk8.6-dev \
+          python3-tk \
+          libharfbuzz-dev \
+          libfribidi-dev \
+          libx11-dev \
+          libxext-dev \
+          libxrender-dev \
+          libxcb1-dev \
+          libxcb-shm0-dev \
+          libxcb-xfixes0-dev \
+          libxcb-randr0-dev \
+          libxcb-shape0-dev \
+          libxcb-sync-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          libgl1-mesa-dev \
+          libgles2-mesa-dev \
+          libdrm-dev \
+          libgbm-dev \
+          libasound2-dev \
+          libpulse-dev \
+          libdbus-1-dev \
+          libudev-dev \
+          libibus-1.0-dev \
+          libxi-dev \
+          libxtst-dev \
+          openjdk-17-jdk \
+          # استبدال libtinfo5 بـ libtinfo6 (متوفر في 22.04)
+          libtinfo6 \
+          # استبدال libxcb-xv-dev بـ libxcb-present-dev (البديل)
+          libxcb-present-dev
+
+    - name: Install Cython and buildozer
+      run: |
+        pip install --upgrade pip
+        pip install cython==0.29.33
+        pip install buildozer
+
+    - name: Build with buildozer
+      run: |
+        buildozer android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: face-recognition-app
+        path: bin/*.apk
+        if-no-files-found: error
