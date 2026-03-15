@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.python-version
+*.so
+
+# Buildozer
+.buildozer/
+bin/
+*.apk
+*.aab
+
+# Android
+*.log
+.gradle/
+build/
+*.keystore
+local.properties
+.classpath
+.project
+*.iml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Virtual environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Database
+*.db
+*.db-journal
+
+# Images and data - نستثني الصور الكبيرة
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.pkl
+!icon.png
+!splash.png
